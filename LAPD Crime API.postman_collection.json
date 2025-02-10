@@ -1,0 +1,144 @@
+{
+	"info": {
+		"_postman_id": "fa2fd2ec-76cb-4cfb-9da0-a0ba2caa91ac",
+		"name": "LAPD Crime API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41814937"
+	},
+	"item": [
+		{
+			"name": "Query 1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/reports/count_by_crime_code?start_date=2024-01-01&end_date=2024-01-31",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"reports",
+						"count_by_crime_code"
+					],
+					"query": [
+						{
+							"key": "start_date",
+							"value": "2024-01-01"
+						},
+						{
+							"key": "end_date",
+							"value": "2024-01-31"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query 2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/reports/count_by_day?start_date=2024-01-01&end_date=2024-01-31&crm_cd=330",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"reports",
+						"count_by_day"
+					],
+					"query": [
+						{
+							"key": "start_date",
+							"value": "2024-01-01"
+						},
+						{
+							"key": "end_date",
+							"value": "2024-01-31"
+						},
+						{
+							"key": "crm_cd",
+							"value": "330"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query 3",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Query 4",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Query 5",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Query 6",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Query 7",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Query 8",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Query 9",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Query 10",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
