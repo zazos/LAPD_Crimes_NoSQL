@@ -4,9 +4,12 @@ from datetime import datetime
 from pymongo.database import Database
 from tqdm import tqdm
 
-# 600 officers (600 x 1000 = 600k capacity), thats slightly above 540k total upvotes. 
-# (for approximately 900k crime reports, upvoting 30% of them gives 270k and if each gets 2 upvotes, that's 540k)
 def generate_officers(n_officers=600):
+    """
+    600 officers (600 x 1000 = 600k capacity), thats slightly above 540k total upvotes. 
+    
+    For approximately 900k crime reports, upvoting 30% of them gives 270k and if each gets 2 upvotes, that's 540k
+    """
     fake = Faker()
     officers = []
     used_badges = set()
@@ -33,8 +36,13 @@ def store_officers(db, officers):
 
 def assign_upvotes(db, officers, threshold=0.3, max_upvotes=1000):
     """
-    Randomly assigns upvotes to ~30% of the crime reports. 
-    Each chosen report gets between 1 and some random number of upvotes (capped by officer's limit).
+    Randomly assigns upvotes to approximately 30% of the crime reports.
+    Each selected report receives between 1 and a random number of upvotes (limited by the officer's maximum upvotes).
+    
+    The number of upvotes for each report ranges from 1 to 3.
+    
+    If there are not enough officers to assign the desired number of upvotes,
+    limit the upvotes for that report to the number of available officers.
     """
         
     total_reports = db.crime_reports.count_documents({})
@@ -42,20 +50,16 @@ def assign_upvotes(db, officers, threshold=0.3, max_upvotes=1000):
         print("No crime reports found. Skipping upvotes.")
         return
 
-    # Grab dr_nos
     dr_no_list = [doc["dr_no"] for doc in db.crime_reports.find({}, {"dr_no":1, "_id":0})]
-    # number of reports to upvote
+
     upvote_count = int(len(dr_no_list) * threshold)
     chosen_reports = random.sample(dr_no_list, upvote_count)
 
     upvotes = []
     for dr_no in tqdm(chosen_reports, desc="Assigning Upvotes"):
-        # arbitrary number of upvotes for this report
         num_upvotes_for_this_report = random.randint(1, 3)
         
         valid_officers = [officer for officer in officers if officer["upvotes"] < max_upvotes]
-        # if there are not enough officers to assign upvotes, 
-        # cap the number of upvotes for this report to the number of valid officers available 
         if len(valid_officers) < num_upvotes_for_this_report:
             print(f"Not enough officers to assign {num_upvotes_for_this_report} upvotes for DR_NO={dr_no}.")
             num_upvotes_for_this_report = len(valid_officers)

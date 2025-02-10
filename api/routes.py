@@ -5,22 +5,17 @@ crime_reports_routes = Blueprint("crime_reports", __name__)
 
 @crime_reports_routes.route("/reports/count_by_crime_code", methods=["GET"])
 def count_by_crime_code():
-    db = current_app.config["db"]  # Get the database connection
+    db = current_app.config["db"]
 
     try:
-        # Get query parameters
         start_date_str = request.args.get("start_date")
         end_date_str = request.args.get("end_date")
-        
-        # Validate parameters
         if not start_date_str or not end_date_str:
             return jsonify({"error": "Both 'start_date' and 'end_date' query parameters are required"}), 400
         
-        # Convert strings to datetime objects
         start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
         end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
-        
-        # Perform the query
+
         result = db.crime_reports.aggregate([
             {"$match": {"date_occ": {"$gte": start_date, "$lte": end_date}}},
             {"$unwind": "$crm_cd_list"},
@@ -38,23 +33,18 @@ def count_by_crime_code():
 
 @crime_reports_routes.route("/reports/count_by_day", methods=["GET"])
 def count_by_day():
-    db = current_app.config["db"]  # Get the database connection
+    db = current_app.config["db"]
 
     try:
-        # Get query parameters
         start_date_str = request.args.get("start_date")
         end_date_str = request.args.get("end_date")
         crm_cd = request.args.get("crm_cd")
-
-        # Validate parameters
         if not start_date_str or not end_date_str or not crm_cd:
             return jsonify({"error": "Parameters 'start_date', 'end_date', and 'crm_cd' are required"}), 400
 
-        # Convert strings to datetime objects
         start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
         end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
-
-        # Perform the query
+        
         result = db.crime_reports.aggregate([
             {"$match": {
                 "date_occ": {"$gte": start_date, "$lte": end_date},
@@ -66,17 +56,13 @@ def count_by_day():
             }},
             {"$sort": {"_id.date": 1}}
         ])
-
-        # Format the response
         response = [{"date": res["_id"]["date"].strftime("%Y-%m-%d"), "count": res["count"]} for res in result]
-
         return jsonify(response)
     
     except ValueError:
         return jsonify({"error": "Invalid date format. Use 'YYYY-MM-DD'"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 # Example: http://127.0.0.1:5000/reports/top_crimes_by_area?date=2023-01-01
 @crime_reports_routes.route("/reports/top_crimes_by_area", methods=["GET"])
@@ -160,7 +146,6 @@ def least_common_crimes():
         return jsonify(result)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 # Example: http://127.0.0.1:5000/reports/weapons_by_crime_across_areas?crm_cd=510
 # Crime Code (crm_cd) is required as a query parameter to filter the results by crime code
@@ -340,7 +325,7 @@ def problematic_reports():
         return jsonify({"error": str(e)}), 500
 
     
-# Example: http://127.0.0.1:5000/officers/voted_areas_by_offiecer?name=Holly%20Martinez
+# Example: http://127.0.0.1:5000/officers/voted_areas_by_officer?name=Holly%20Martinez
 @crime_reports_routes.route("/officers/voted_areas_by_officer", methods=["GET"])
 def voted_areas_by_officer():
     db = current_app.config["db"]

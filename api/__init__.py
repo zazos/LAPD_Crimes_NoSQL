@@ -4,12 +4,7 @@ from api.routes import crime_reports_routes
 
 def create_app():
     app = Flask(__name__)
-
-    # MongoDB connection
     client = MongoClient("mongodb+srv://pzazos:08gFAWabTBcHZjge@lapdcrimes.wrl2r.mongodb.net/?retryWrites=true&w=majority&appName=LAPDcrimes")
     app.config["db"] = client["LAPDcrimes"]
-
-    # Register routes
     app.register_blueprint(crime_reports_routes)
-
     return app

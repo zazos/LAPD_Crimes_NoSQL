@@ -6,7 +6,6 @@ def build_crime_documents(df):
     """
     Builds a list of Crime Report document dictionaries from the preprocessed DataFrame.
     """
-    # map for Crm Cd 1 -> description
     crime_cds_map = {}
     cd_defs = df[['Crm Cd 1','Crm Cd Desc']].dropna(subset=['Crm Cd 1','Crm Cd Desc']).drop_duplicates()
     for _, row in cd_defs.iterrows():
@@ -73,7 +72,6 @@ def insert_crime_reports(db, crime_docs, chunk_size=10000):
             chunk = crime_docs[i:i+chunk_size]
             result = db.crime_reports.insert_many(chunk)
             pbar.update(1)
-
-    # Optional indexes
+            
     db.crime_reports.create_index("dr_no", unique=True)
     print("Finished inserting crime reports.")
